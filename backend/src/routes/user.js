@@ -11,4 +11,8 @@ router.get("/:userId", (req, res) => {
   });
 });
 
+router.post("/", (req, res) => {
+  res.send("Placeholder");
+});
+
 module.exports = router;
