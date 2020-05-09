@@ -6,11 +6,16 @@ var { models, sequelize } = require("./models");
 const app = express();
 const eraseDatabaseOnStart = false; // db cleared and repopulated on start
 
-// Middleware
+//// Middleware ////
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Add app context to each request
+app.use(async (req, res, next) => {
+  req.context = { models };
+  next();
+});
 
-// Routes
+//// Routes ////
 app.use("/users", routes.user);
 
 sequelize.sync({ force: eraseDatabaseOnStart }).then(() => {

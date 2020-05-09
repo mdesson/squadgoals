@@ -17,10 +17,11 @@ describe("User Routes", () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.eql({
-          firstName: "Johnny",
-          lastName: "tester",
-          email: "123@fake.com",
-          aspirationalMessage: "If you can dream it, you can do it!",
+          id: 1,
+          email: "pat@royal-mail.co.uk",
+          firstName: "Postman",
+          lastName: "Pat",
+          aspirationalMessage: "Post man Pat and his black and white cat",
         });
       });
     done();
