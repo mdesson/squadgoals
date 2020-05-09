@@ -31,10 +31,13 @@ describe("User Routes", () => {
       .request(app)
       .post("/users")
       .set("content-type", "application/x-www-form-urlencoded")
-      .field("firstName", "Postman")
-      .field("lastName", "Pat")
-      .field("email", "pat@royalmail.co.uk")
-      .field("aspirationalMessage", "Postman Pat and his black and white cat")
+      .field("firstName", "Sally")
+      .field("lastName", "Successful")
+      .field("email", "sally@test.com")
+      .field(
+        "aspirationalMessage",
+        "I love nothing more than a good POST that hits the db"
+      )
       .attach(
         "avatar",
         fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
@@ -42,14 +45,31 @@ describe("User Routes", () => {
       );
     res.should.have.status(201);
   });
+  it("Should fail to user with duplicate email address", async () => {
+    const res = await chai
+      .request(app)
+      .post("/users")
+      .set("content-type", "application/x-www-form-urlencoded")
+      .field("firstName", "Dolly")
+      .field("lastName", "Duplicate")
+      .field("email", "sally@test.com")
+      .field("aspirationalMessage", "Duplicate email address")
+      .attach(
+        "avatar",
+        fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
+        "avatar.jpg"
+      );
+    res.should.have.status(400);
+  });
+
   it("Should fail with status 400 (bad request)", async () => {
     const res = await chai
       .request(app)
       .post("/users")
       .set("content-type", "application/x-www-form-urlencoded")
-      .field("lastName", "Pat")
-      .field("email", "pat@royalmail.co.uk")
-      .field("aspirationalMessage", "Postman Pat and his black and white cat")
+      .field("lastName", "Failure")
+      .field("email", "123@fake.com")
+      .field("aspirationalMessage", "This will not work, no firstname")
       .attach(
         "avatar",
         fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
