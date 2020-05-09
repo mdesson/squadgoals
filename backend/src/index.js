@@ -4,7 +4,7 @@ var routes = require("./routes");
 var { models, sequelize } = require("./models");
 
 const app = express();
-const eraseDatabaseOnStart = true; // db cleared and repopulated on start
+const eraseDatabaseOnStart = false; // db cleared and repopulated on start
 
 // Middleware
 app.use(express.json());
@@ -15,7 +15,9 @@ app.use("/users", routes.user);
 
 sequelize.sync({ force: eraseDatabaseOnStart }).then(() => {
   if (eraseDatabaseOnStart) {
+    console.log("Database erased. Repopulating...");
     createSampleUsers();
+    setTimeout(() => console.log("Database database populated."), 1000);
   }
   app.listen(process.env.PORT, () => {
     console.log(`frontend is listening on port ${process.env.PORT}`);
