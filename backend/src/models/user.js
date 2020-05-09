@@ -34,6 +34,15 @@ const user = (sequelize, DataTypes) => {
     },
   });
 
+  // User find functions
+  User.findById = async (userId) => {
+    let user = await User.findOne({
+      where: { id: userId },
+    });
+
+    return user;
+  };
+
   User.findByEmail = async (emailAddress) => {
     let user = await User.findOne({
       where: { email: emailAddress },
