@@ -16,7 +16,6 @@ describe("User Routes", () => {
       .get("/users/1")
       .end((err, res) => {
         res.should.have.status(200);
-        // TODO: Get record from db using sequelize and just compare
         res.body.should.be.eql({
           firstName: "Johnny",
           lastName: "tester",
@@ -40,12 +39,21 @@ describe("User Routes", () => {
         fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
         "avatar.jpg"
       );
-    //   .field("user", {
-    //     firstName: "Postman",
-    //     lastName: "Pat",
-    //     email: "123@royalmail.co.uk",
-    //     aspirationalMessage: "Postman Pat and his black and white cat",
-    //   })
-    expect(res.body).to.be.an("object");
+    res.should.have.status(201);
+  });
+  it("Should fail with status 400 (bad request)", async () => {
+    const res = await chai
+      .request(app)
+      .post("/users")
+      .set("content-type", "application/x-www-form-urlencoded")
+      .field("lastName", "Pat")
+      .field("email", "pat@royalmail.co.uk")
+      .field("aspirationalMessage", "Postman Pat and his black and white cat")
+      .attach(
+        "avatar",
+        fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
+        "avatar.jpg"
+      );
+    res.should.have.status(400);
   });
 });
