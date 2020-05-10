@@ -1,6 +1,7 @@
 const express = require("express");
 var multer = require("multer");
 var fs = require("fs");
+var path = require("path");
 
 const router = express.Router();
 const upload = multer();
@@ -14,6 +15,12 @@ router.get("/:userId", async (req, res) => {
   delete userData.updatedAt;
 
   res.send(userData);
+});
+
+router.get("/avatar/:userId", (req, res) => {
+  let filePath = path.join(__dirname, `../../data/${req.params.userId}.jpg`);
+  if (fs.existsSync(filePath)) res.sendFile(filePath);
+  else res.sendStatus(404);
 });
 
 router.post("/", upload.single("avatar"), async (req, res) => {

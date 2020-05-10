@@ -9,7 +9,7 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe("User Routes", () => {
+describe("GET Routes", () => {
   it("Should return 1 user", (done) => {
     chai
       .request(app)
@@ -26,7 +26,28 @@ describe("User Routes", () => {
       });
     done();
   });
-  it("Should create 1 user", async () => {
+  it("Should return avatar", (done) => {
+    chai
+      .request(app)
+      .get("/users/avatar/1")
+      .end((err, res) => {
+        res.should.have.status(200);
+      });
+    done();
+  });
+  it("Should return avatar not found", (done) => {
+    chai
+      .request(app)
+      .get("/users/avatar/3")
+      .end((err, res) => {
+        res.should.have.status(404);
+      });
+    done();
+  });
+});
+
+describe("POST Routes", () => {
+  it("Should create one user", async () => {
     const res = await chai
       .request(app)
       .post("/users")
