@@ -27,6 +27,7 @@ const buildReduxStore = (deps = {}, forceCreationOfNewStore = false) => {
 		reduxStore = createStore(rootReducer, ...args);
 		epicMiddleware.run(rootEpic);
 	}
+
 	return reduxStore;
 };
 

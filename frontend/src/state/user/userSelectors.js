@@ -1,9 +1,6 @@
 import { createSelector } from 'reselect';
 
-console.log(store);
-
-
-const userStateSelector = (state) => state.user;
+const userStateSelector = (state) => state.userReducer;
 
 export const userDetailsSelector = createSelector(
 	[userStateSelector],
