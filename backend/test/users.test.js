@@ -26,6 +26,7 @@ describe("GET Routes", () => {
       });
     done();
   });
+
   it("Should return avatar", (done) => {
     chai
       .request(app)
@@ -35,6 +36,7 @@ describe("GET Routes", () => {
       });
     done();
   });
+
   it("Should return avatar not found", (done) => {
     chai
       .request(app)
@@ -66,6 +68,19 @@ describe("POST Routes", () => {
       );
     res.should.have.status(201);
   });
+
+  it("Should create one with default avatar", async () => {
+    const res = await chai
+      .request(app)
+      .post("/users")
+      .set("content-type", "application/x-www-form-urlencoded")
+      .field("firstName", "Daniel")
+      .field("lastName", "Default")
+      .field("email", "default@test.com")
+      .field("aspirationalMessage", "Set it and forget it");
+    res.should.have.status(201);
+  });
+
   it("Should fail to user with duplicate email address", async () => {
     const res = await chai
       .request(app)

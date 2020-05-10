@@ -30,8 +30,7 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     !req.body.firstName ||
     !req.body.lastName ||
     !req.body.email ||
-    !req.body.aspirationalMessage ||
-    !req.file
+    !req.body.aspirationalMessage
   ) {
     res.sendStatus(400);
     return;
@@ -48,12 +47,18 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     res.sendStatus(201);
   } catch (err) {
     // Error saving user to database
-    // if (req.body.firstName === "Sally") console.log(err);
+    // if (req.body.firstName === "Daniel") console.log(err);
     res.status(400);
     res.send({ error: "Error creating user. Email may be in use." });
   }
   if (fileName) {
-    fs.writeFile(`data/${fileName}`, req.file.buffer, () => {});
+    // Avatar included in POST
+    if (req.file) fs.writeFile(`data/${fileName}`, req.file.buffer, () => {});
+    // No avatar in request, use default image
+    else
+      fs.copyFile("public/default-avatar.png", `data/${fileName}`, (err) => {
+        if (err) throw err;
+      });
   }
 });
 
