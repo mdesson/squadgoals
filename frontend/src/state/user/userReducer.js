@@ -10,22 +10,20 @@ const initialState = {
 };
 
 const userReducer = (state = initialState, action) => {
+	console.log(action);
 	switch (action.type) {
-		// REQUEST 
 		case GET_USER_REQUEST:
 			return {
 				...state,
 				isLoading: true,
             };
-        // SUCCESS
         case GET_USER_SUCCESS: {
             return {
                 ...state,
-                utilityOptions: action.payload.user,
+                user: action.payload.user,
                 isLoading: false,
             };
         }
-        // ERROR
 		case GET_USER_ERROR:
 			return {
 				...state,

@@ -1,8 +1,11 @@
 import { createSelector } from 'reselect';
 
+console.log(store);
+
+
 const userStateSelector = (state) => state.user;
 
-export const userSelector = createSelector(
+export const userDetailsSelector = createSelector(
 	[userStateSelector],
 	(userState) => userState.user
 );
