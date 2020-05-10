@@ -3,6 +3,7 @@ var express = require("express");
 var fs = require("fs");
 var routes = require("./routes");
 var { models, sequelize } = require("./models");
+var cors = require("cors");
 
 const app = express();
 const eraseDatabaseOnStart = true; // db cleared and repopulated on start
@@ -10,6 +11,7 @@ const eraseDatabaseOnStart = true; // db cleared and repopulated on start
 //// Middleware ////
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Add app context to each request
 app.use(async (req, res, next) => {
