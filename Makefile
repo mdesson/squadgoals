@@ -19,23 +19,23 @@ test:
 	
 .PHONY: build
 build: 
-	echo "====== Reinstalling node_modules ======"
+	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
-	echo "====== Rebuilding images ======"
+	@echo "====== Rebuilding images ======"
 	cd frontend && docker build -t squadgoals-frontend .
 	cd backend && docker build -t squadgoals-backend .
-	echo "====== Rebuild Complete! ======"
+	@echo "====== Rebuild Complete! ======"
 
 
 .PHONY: clean
 clean:
-	echo "====== Removing node_modules ======"
+	@echo "====== Removing node_modules ======"
 	rm -rf frontend/node_modules backend/node_modules
-	echo "====== Reinstalling node_modules ======"
+	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
-	echo "====== Rebuilding images ======"
+	@echo "====== Rebuilding images ======"
 	cd frontend && docker build -t squadgoals-frontend .
 	cd backend && docker build -t squadgoals-backend .
-	echo "====== Clean and Rebuild Complete! ======"
+	@echo "====== Clean and Rebuild Complete! ======"
