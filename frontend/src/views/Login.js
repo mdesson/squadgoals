@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Material UI
 import {
@@ -11,6 +12,10 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+
+// Redux
+import { getUserRequest } from '../state/user/userActions';
+import { userDetailsSelector } from '../state/user/userSelectors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +50,16 @@ const useStyles = makeStyles((theme) => ({
 function Login() {
 
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const user = useSelector(userDetailsSelector);
+
+  useEffect(() => {
+    dispatch(getUserRequest(1));
+  }, [])
+
+  // Just Testing To Ensure it works
+  console.log(user);
 
   return (
     <Grid container component="main" className={classes.root}>
