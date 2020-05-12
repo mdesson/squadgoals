@@ -3,6 +3,8 @@ version: "2"
 services:
   frontend:
     image: squadgoals-frontend
+  environment:
+    - BACKEND_HOST
     restart: always
     stdin_open: true
     ports:

@@ -1,6 +1,9 @@
 # Environment variables for local shell environments
 test: export DB_HOST = 127.0.0.1
+test: export BACKEND_HOST = localhost
+
 run: export DB_HOST = postgres
+run: export BACKEND_HOST = backend
 
 .PHONY: help
 help:
