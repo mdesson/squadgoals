@@ -17,6 +17,8 @@ services:
 
   backend:
     image: squadgoals-backend
+    depends_on:
+      - postgres
     restart: always
     ports:
       - "3100:3100"
@@ -26,6 +28,23 @@ services:
     networks:
       - squadgoalsnetwork
 
+  postgres:
+    image: postgres:12.2
+    volumes:
+      - data:/var/lib/postgres/data
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: squadgoals
+    networks:
+      - squadgoalsnetwork
+    ports:
+      - "35432:5432"
+
 networks:
   squadgoalsnetwork:
     driver: bridge
+
+volumes:
+  data: {}

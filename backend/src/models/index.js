@@ -6,6 +6,7 @@ const sequelize = new Sequelize(
   process.env.DATABASE_PASSWORD,
   {
     dialect: "postgres",
+    host: process.env.USING_DOCKER === "true" ? "postgres" : "127.0.0.1",
   }
 );
 
