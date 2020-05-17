@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'react-final-form';
-import Joi from '@hapi/joi';
 
 // Material UI
 import {
@@ -22,13 +21,12 @@ function FormDialog({
 	onCancel,
 	onSubmit,
 }) {
-
 	return (
 		<Dialog fullWidth maxWidth={maxWidth} open={open} onClose={close}>
 			<DialogTitle>{title}</DialogTitle>
 			<DialogContent>
 				<Form
-                    onSubmit={onSubmit}
+					onSubmit={onSubmit}
 					render={({ handleSubmit }) => (
 						<form onSubmit={handleSubmit}>
 							{children}

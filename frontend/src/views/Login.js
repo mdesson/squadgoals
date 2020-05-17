@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.secondary.main,
 	},
 	form: {
-		width: '100%', // Fix IE 11 issue.
+		width: '100%',
 		marginTop: theme.spacing(1),
 	},
 	submit: {
@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-// TODO: Implement Final Form
 // TODO: Add 'Forgot My Password' Feature
 
 function Login() {

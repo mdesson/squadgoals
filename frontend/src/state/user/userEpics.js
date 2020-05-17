@@ -16,7 +16,7 @@ const getUserEvent = (action$) => {
     ofType(GET_USER_REQUEST),
     mergeMap(({ payload: { userId } }) =>
       ajax
-        .getJSON(`http://${process.env.BACKEND_HOST}:3100/users/${userId}/`)
+        .getJSON(`http://localhost:3100/users/${userId}/`)
         .pipe(
           map((response) => getUserSuccess(response)),
           catchError((err) => {

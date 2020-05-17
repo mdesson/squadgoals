@@ -1,9 +1,6 @@
 import React from 'react';
 import { TextField } from 'mui-rff';
 
-// Validation
-import createAccountSchema from './CreateAccountFormDialog.schema';
-
 // Common Component
 import FormDialog from '../common/components/FormDialog';
 
@@ -22,7 +19,7 @@ function CreateAccountFormDialog({ open, close }) {
 			maxWidth="md"
 			title="Create an Account"
 			primaryButtonLabel="Create Account"
-            secondaryButtonLabel="Cancel"
+			secondaryButtonLabel="Cancel"
 			onSubmit={onSubmit}
 			onCancel={close}
 		>
