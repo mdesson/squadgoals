@@ -19,10 +19,9 @@ export const postUserRequest = (userInformation) => {
 // SUCCESS
 
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
-export const getUserSuccess = (user) => {
+export const getUserSuccess = () => {
 	return {
 		type: GET_USER_SUCCESS,
-		payload: { user },
 	};
 };
 

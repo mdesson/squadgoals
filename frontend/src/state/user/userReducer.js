@@ -42,7 +42,6 @@ const userReducer = (state = initialState, action) => {
 		case POST_USER_SUCCESS: {
 			return {
 				...state,
-				user: action.payload.user,
 				isSubmitting: false,
 			};
 		}
