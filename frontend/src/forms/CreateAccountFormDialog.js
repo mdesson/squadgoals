@@ -1,15 +1,24 @@
 import React from 'react';
-import { TextField } from 'mui-rff';
 
-// Common Component
+// Redux
+import { useDispatch } from 'react-redux';
+import { postUserRequest } from '../state/user/userActions';
+
+// Form
+import { TextField } from 'mui-rff';
 import FormDialog from '../common/components/FormDialog';
+
+// Util
+import queryString from 'query-string'
 
 // TODO: Link Up JOI Validaton
 // TODO: Add User Avatar
 
 function CreateAccountFormDialog({ open, close }) {
+	const dispatch = useDispatch();
+
 	const onSubmit = (formValues) => {
-		console.log(formValues);
+		dispatch(postUserRequest(queryString.stringify(formValues)));
 	};
 
 	return (

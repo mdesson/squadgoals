@@ -8,6 +8,14 @@ export const getUserRequest = (userId) => {
 	};
 };
 
+export const POST_USER_REQUEST = 'POST_USER_REQUEST';
+export const postUserRequest = (userInformation) => {
+	return {
+		type: POST_USER_REQUEST,
+		payload: { userInformation },
+	};
+};
+
 // SUCCESS
 
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
@@ -18,10 +26,24 @@ export const getUserSuccess = (user) => {
 	};
 };
 
+export const POST_USER_SUCCESS = 'POST_USER_SUCCESS';
+export const postUserSuccess = (user) => {
+	return {
+		type: POST_USER_SUCCESS,
+		payload: { user },
+	};
+};
+
 // ERROR
 
 export const GET_USER_ERROR = 'GET_USER_ERROR';
 export const getUserError = (error) => ({
 	type: GET_USER_ERROR,
+	payload: { error },
+});
+
+export const POST_USER_ERROR = 'POST_USER_ERROR';
+export const postUserError = (error) => ({
+	type: POST_USER_ERROR,
 	payload: { error },
 });

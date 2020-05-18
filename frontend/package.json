@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^7.2.1",
     "final-form": "^4.19.1",
     "mui-rff": "^2.1.15",
+    "query-string": "^6.12.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-final-form": "^6.4.0",
