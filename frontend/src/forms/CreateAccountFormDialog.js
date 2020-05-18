@@ -7,11 +7,11 @@ import { postUserRequest } from '../state/user/userActions';
 // Form
 import { TextField } from 'mui-rff';
 import FormDialog from '../common/components/FormDialog';
+import createAccountSchema from './CreateAccountFormDialog.schema';
 
 // Util
 import queryString from 'query-string'
 
-// TODO: Link Up JOI Validaton
 // TODO: Add User Avatar
 
 function CreateAccountFormDialog({ open, close }) {
@@ -19,6 +19,7 @@ function CreateAccountFormDialog({ open, close }) {
 
 	const onSubmit = (formValues) => {
 		dispatch(postUserRequest(queryString.stringify(formValues)));
+		close();
 	};
 
 	return (
@@ -29,6 +30,7 @@ function CreateAccountFormDialog({ open, close }) {
 			title="Create an Account"
 			primaryButtonLabel="Create Account"
 			secondaryButtonLabel="Cancel"
+			validationSchema={createAccountSchema}
 			onSubmit={onSubmit}
 			onCancel={close}
 		>

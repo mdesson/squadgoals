@@ -10,25 +10,33 @@ import {
 	Grid,
 } from '@material-ui/core';
 
+// Util
+import ValidationService from '../services/validation.service';
+
 function FormDialog({
-	open,
+	children,
 	close,
 	maxWidth,
-	title,
-	primaryButtonLabel,
-	secondaryButtonLabel,
-	children,
+	open,
 	onCancel,
 	onSubmit,
+	primaryButtonLabel,
+	secondaryButtonLabel,
+	title,
+	validationSchema
 }) {
+
+	const generateErrors = (values) => ValidationService(values, validationSchema).errors;
+
 	return (
 		<Dialog fullWidth maxWidth={maxWidth} open={open} onClose={close}>
 			<DialogTitle>{title}</DialogTitle>
 			<DialogContent>
 				<Form
 					onSubmit={onSubmit}
+					validate={generateErrors}
 					render={({ handleSubmit }) => (
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit} noValidate>
 							{children}
 							<Grid
 								container
