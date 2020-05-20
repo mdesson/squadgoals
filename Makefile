@@ -20,7 +20,8 @@ test:
 	cd backend && npm test
 	
 .PHONY: build
-build: 
+build: | backend/data
+	@echo "====== Reinstalling node_modules ======"
 	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
@@ -41,3 +42,7 @@ clean:
 	cd frontend && docker build -t squadgoals-frontend .
 	cd backend && docker build -t squadgoals-backend .
 	@echo "====== Clean and Rebuild Complete! ======"
+
+backend/data:
+	@echo "====== Data folder does not exist, creating ======"
+	mkdir -p $@
