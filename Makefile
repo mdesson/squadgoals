@@ -20,7 +20,7 @@ test:
 	cd backend && npm test
 	
 .PHONY: build
-build: | backend/data
+build: | backend/data backend/.env
 	@echo "====== Reinstalling node_modules ======"
 	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
@@ -46,3 +46,12 @@ clean:
 backend/data:
 	@echo "====== Data folder does not exist, creating ======"
 	mkdir -p $@
+
+backend/.env:
+	@echo "====== Creating .env file with default values ======"
+	@echo "====== WARNING: Do not use in production! ======"
+	touch $@
+	echo "PORT=3100" > $@
+	echo "DATABASE=squadgoals" >> $@
+	echo "DATABASE_USER=postgres" >> $@
+	echo "DATABASE_PASSWORD=postgres" >> $@
