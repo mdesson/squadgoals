@@ -21,7 +21,8 @@ test:
 	
 .PHONY: build
 build: | backend/data backend/.env
-	@echo "====== Reinstalling node_modules ======"
+	@echo "====== Adding Execute Permissions to wait-for-it.sh ======"
+	chmod +x backend/wait-for-it.sh
 	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
