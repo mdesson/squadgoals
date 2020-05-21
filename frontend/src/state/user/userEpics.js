@@ -1,15 +1,20 @@
-// RXJS OPERATORS
-import { catchError, mergeMap, map } from "rxjs/operators";
-// OBSERVABLE HELPERS
-import { of } from "rxjs/observable/of";
-// RXJS OBSERVABLE
-import { ofType } from "redux-observable";
-// AJAX
-import { ajax } from "rxjs/ajax";
-// REDUX ACTIONS
-import { GET_USER_REQUEST, getUserSuccess, getUserError } from "./userActions";
-
-// TODO: Hit actual endpoint for users
+// rxjs Operators
+import { catchError, mergeMap, map } from 'rxjs/operators';
+// Observable Helpers
+import { of } from 'rxjs/observable/of';
+// rxjs Observable
+import { combineEpics, ofType } from 'redux-observable';
+// Ajax
+import { ajax } from 'rxjs/ajax';
+// Redux Actions
+import {
+  GET_USER_REQUEST,
+  getUserSuccess,
+  getUserError,
+  POST_USER_REQUEST,
+  postUserSuccess,
+  postUserError,
+} from "./userActions";
 
 const getUserEvent = (action$) => {
   return action$.pipe(
@@ -27,4 +32,22 @@ const getUserEvent = (action$) => {
   );
 };
 
-export default getUserEvent;
+const postUserEvent = (action$) => {
+  return action$.pipe(
+    ofType(POST_USER_REQUEST),
+    mergeMap(({ payload: { userInformation } }) =>
+      ajax
+        .post(`http://${process.env.BACKEND_HOST}:3100/users/`,
+          userInformation,
+          { 'Content-Type': 'application/x-www-form-urlencoded' }
+        ).pipe(
+          map((response) => postUserSuccess(response)),
+          catchError((err) => {
+            return of(postUserError(err));
+          })
+        )
+    )
+  )
+}
+
+export default combineEpics(getUserEvent, postUserEvent);
