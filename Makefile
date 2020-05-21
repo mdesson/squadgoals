@@ -2,7 +2,7 @@
 test: export DB_HOST = 127.0.0.1
 
 run: export DB_HOST = postgres
-run: export BACKEND_HOST = backend
+run: export REACT_APP_BACKEND_HOST = localhost
 
 .PHONY: help
 help:

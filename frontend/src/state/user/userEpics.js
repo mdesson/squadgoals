@@ -1,11 +1,11 @@
 // rxjs Operators
-import { catchError, mergeMap, map } from 'rxjs/operators';
+import { catchError, mergeMap, map } from "rxjs/operators";
 // Observable Helpers
-import { of } from 'rxjs/observable/of';
+import { of } from "rxjs/observable/of";
 // rxjs Observable
-import { combineEpics, ofType } from 'redux-observable';
+import { combineEpics, ofType } from "redux-observable";
 // Ajax
-import { ajax } from 'rxjs/ajax';
+import { ajax } from "rxjs/ajax";
 // Redux Actions
 import {
   GET_USER_REQUEST,
@@ -21,7 +21,9 @@ const getUserEvent = (action$) => {
     ofType(GET_USER_REQUEST),
     mergeMap(({ payload: { userId } }) =>
       ajax
-        .getJSON(`http://${process.env.BACKEND_HOST}:3100/users/${userId}/`)
+        .getJSON(
+          `http://${process.env.REACT_APP_BACKEND_HOST}:3100/users/${userId}/`
+        )
         .pipe(
           map((response) => getUserSuccess(response)),
           catchError((err) => {
@@ -37,17 +39,19 @@ const postUserEvent = (action$) => {
     ofType(POST_USER_REQUEST),
     mergeMap(({ payload: { userInformation } }) =>
       ajax
-        .post(`http://${process.env.BACKEND_HOST}:3100/users/`,
+        .post(
+          `http://${process.env.REACT_APP_BACKEND_HOST}:3100/users/`,
           userInformation,
-          { 'Content-Type': 'application/x-www-form-urlencoded' }
-        ).pipe(
+          { "Content-Type": "application/x-www-form-urlencoded" }
+        )
+        .pipe(
           map((response) => postUserSuccess(response)),
           catchError((err) => {
             return of(postUserError(err));
           })
         )
     )
-  )
-}
+  );
+};
 
 export default combineEpics(getUserEvent, postUserEvent);
