@@ -20,7 +20,11 @@ test:
 	cd backend && npm test
 	
 .PHONY: build
-build: 
+build: | backend/data backend/.env
+	@echo "====== Adding Execute Permissions to wait-for-it.sh ======"
+	chmod +x backend/wait-for-it.sh
+	@echo "====== Removing package_lock.json ======"
+	rm -f frontend/package_lock.json backend/package_lock.json
 	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
@@ -41,3 +45,16 @@ clean:
 	cd frontend && docker build -t squadgoals-frontend .
 	cd backend && docker build -t squadgoals-backend .
 	@echo "====== Clean and Rebuild Complete! ======"
+
+backend/data:
+	@echo "====== Data folder does not exist, creating ======"
+	mkdir -p $@
+
+backend/.env:
+	@echo "====== Creating .env file with default values ======"
+	@echo "====== WARNING: Do not use in production! ======"
+	touch $@
+	echo "PORT=3100" > $@
+	echo "DATABASE=squadgoals" >> $@
+	echo "DATABASE_USER=postgres" >> $@
+	echo "DATABASE_PASSWORD=postgres" >> $@
