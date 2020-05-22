@@ -46,6 +46,12 @@ services:
     ports:
       - "35432:5432"
 
+  cowsay:
+    image: grycap/cowsay:latest
+    depends_on:
+      - frontend
+    command: /usr/games/cowsay -f dragon "Hey hey hey! Hey hey hey! Hey hey hey! Whatsawhatsawhatsawhatsawhatsawhatsawhatsa up SquadGoals! Hey hey hey everybody my name is Mike and I am coming from Quebec City, Quebec and let me tell you guys that I am so excited, I am so happy, I am really so thrilled to be right now sharing this amazing, glorious, super, and exciting moment of my life with all of you guys, and let me tell you that we are really changing the world as we know it, the world is not anymore the way it used to be, mmm mmm, No! No! No! SQUAD GOALS! Wow! SQUAD GOALS!"
+
 networks:
   squadgoalsnetwork:
     driver: bridge

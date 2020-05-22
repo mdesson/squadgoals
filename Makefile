@@ -24,8 +24,7 @@ build: | backend/data backend/.env
 	@echo "====== Adding Execute Permissions to wait-for-it.sh ======"
 	chmod +x backend/wait-for-it.sh
 	@echo "====== Removing package_lock.json ======"
-	rm frontend/package_lock.json
-	rm backend/package_lock.json
+	rm -f frontend/package_lock.json backend/package_lock.json
 	@echo "====== Reinstalling node_modules ======"
 	cd frontend && npm install
 	cd backend && npm install
