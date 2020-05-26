@@ -13,10 +13,7 @@ const eraseDatabaseOnStart = true; // db cleared and repopulated on start
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-// Add app context to each request
-app.use(appContext);
-// Check if user is authorized on each request
-app.use(isAuth);
+app.use(appContext); // Add app context to each request
 
 //// Routes ////
 app.use("/users", routes.user);
