@@ -32,7 +32,6 @@ const AuthService = {
   async Login(email, password) {
     const user = await models.User.findByEmail(email);
     const userAuth = models.Auth.findByUserId(user.id);
-    const passwordValid = await argon2.verify(userAuth.hash, password);
 
     // No user, return error message
     // TODO: Stanardize returning errors
