@@ -55,4 +55,4 @@ const generateJWT = (user) => {
   );
 };
 
-export default AuthService;
+module.exports = AuthService;

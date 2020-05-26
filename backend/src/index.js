@@ -3,6 +3,7 @@ var express = require("express");
 var fs = require("fs");
 var routes = require("./routes");
 var { models, sequelize } = require("./models");
+var { appContext, isAuth } = require("./middleware");
 var cors = require("cors");
 
 const app = express();
@@ -12,16 +13,15 @@ const eraseDatabaseOnStart = true; // db cleared and repopulated on start
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-
 // Add app context to each request
-app.use(async (req, res, next) => {
-  req.context = { models };
-  next();
-});
+app.use(appContext);
+// Check if user is authorized on each request
+app.use(isAuth);
 
 //// Routes ////
 app.use("/users", routes.user);
 
+// Start app (erase db if flag is true)
 sequelize.sync({ force: eraseDatabaseOnStart }).then(() => {
   if (eraseDatabaseOnStart) {
     console.log("Database erased. Repopulating.");
