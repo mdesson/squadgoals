@@ -31,16 +31,20 @@ const AuthService = {
 
   async Login(email, password) {
     const user = await models.User.findByEmail(email);
-    const userAuth = models.Auth.findByUserId(user.id);
+    const userAuth = await models.Auth.findByUserId(user.id);
 
     // No user, return error message
-    // TODO: Stanardize returning errors
     if (!user) return { error: "Invalid username or password" };
 
     // Invalid password, return error message
-    // TODO: Stanardize returning errors
-    const passwordValid = await argon2.verify(userAuth.hash, password);
-    if (!user) return { error: "Invalid username or password" };
+    const passwordValid = await argon2.verify(
+      userAuth.dataValues.hash,
+      password
+    );
+    if (!passwordValid) return { error: "Invalid username or password" };
+
+    const token = generateJWT(user.dataValues);
+    return { token, user: user.dataValues };
   },
 };
 

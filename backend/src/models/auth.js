@@ -22,7 +22,7 @@ const auth = (sequelize, DataTypes) => {
 
   // User find functions
   Auth.findByUserId = async (userId) => {
-    let auth = await User.findOne({
+    let auth = await Auth.findOne({
       where: { userId: userId },
     });
 

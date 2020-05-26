@@ -4,6 +4,7 @@ var fs = require("fs");
 var path = require("path");
 
 var { authService } = require("../services");
+var { isAuth } = require("../middleware");
 
 const router = express.Router();
 const upload = multer();
@@ -53,7 +54,6 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     res.send({ token, user });
   } catch (err) {
     // Error saving user to database
-    // if (req.body.firstName === "Daniel") console.log(err);
     res.status(400);
     console.log(err);
     res.send({ error: "Error creating user. Email may be in use." });
@@ -67,6 +67,18 @@ router.post("/", upload.single("avatar"), async (req, res) => {
         if (err) throw err;
       });
   }
+});
+
+router.post("/login", async (req, res) => {
+  const { token, user, error } = await authService.Login(
+    req.body.email,
+    req.body.password
+  );
+
+  if (error) {
+    res.status(401);
+    res.send({ error });
+  } else res.send({ token, user });
 });
 
 module.exports = router;
