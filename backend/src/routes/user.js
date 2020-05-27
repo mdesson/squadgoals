@@ -4,12 +4,13 @@ var fs = require("fs");
 var path = require("path");
 
 var { authService } = require("../services");
-var { isAuth } = require("../middleware");
+var { isAuth, attachCurrentUser } = require("../middleware");
 
 const router = express.Router();
 const upload = multer();
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", isAuth, attachCurrentUser, async (req, res) => {
+  if (req.user.id !== req.params.userId) return res.sendStatus(401);
   const user = await req.context.models.User.findById(req.params.userId);
   const userData = user.dataValues;
 
@@ -20,7 +21,7 @@ router.get("/:userId", async (req, res) => {
   res.send(userData);
 });
 
-router.get("/avatar/:userId", (req, res) => {
+router.get("/avatar/:userId", isAuth, attachCurrentUser, (req, res) => {
   let filePath = path.join(__dirname, `../../data/${req.params.userId}.jpg`);
   if (fs.existsSync(filePath)) res.sendFile(filePath);
   else res.sendStatus(404);
