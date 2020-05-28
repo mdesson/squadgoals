@@ -1,5 +1,3 @@
-import user from "./user";
-
 const auth = (sequelize, DataTypes) => {
   const Auth = sequelize.define("auth", {
     hash: {

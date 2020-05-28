@@ -8,7 +8,7 @@ var { authService } = require("./services");
 var cors = require("cors");
 
 const app = express();
-const eraseDatabaseOnStart = true; // db cleared and repopulated on start
+const eraseDatabaseOnStart = false; // db cleared and repopulated on start
 
 //// Middleware ////
 app.use(express.json());

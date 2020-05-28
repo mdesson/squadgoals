@@ -1,7 +1,7 @@
-import * as argon2 from "argon2";
-import * as jwt from "jsonwebtoken";
-import { randomBytes } from "crypto";
-import { models } from "../models";
+var argon2 = require("argon2");
+var jwt = require("jsonwebtoken");
+var { randomBytes } = require("crypto");
+var { models } = require("../models");
 
 const AuthService = {
   async SignUp(firstName, lastName, email, aspirationalMessage, password) {
