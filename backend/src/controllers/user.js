@@ -1,9 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-
 const { authService } = require("../services");
-
 
 exports.getUser = (req, res, next) => {
   // userId is a string so !== returns true
