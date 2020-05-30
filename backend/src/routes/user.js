@@ -3,10 +3,14 @@ var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
 
+var { authService } = require("../services");
+var { isAuth, attachCurrentUser } = require("../middleware");
+
 const router = express.Router();
 const upload = multer();
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", isAuth, attachCurrentUser, async (req, res) => {
+  if (req.user.id !== req.params.userId) return res.sendStatus(401);
   const user = await req.context.models.User.findById(req.params.userId);
   const userData = user.dataValues;
 
@@ -17,7 +21,7 @@ router.get("/:userId", async (req, res) => {
   res.send(userData);
 });
 
-router.get("/avatar/:userId", (req, res) => {
+router.get("/avatar/:userId", isAuth, attachCurrentUser, (req, res) => {
   let filePath = path.join(__dirname, `../../data/${req.params.userId}.jpg`);
   if (fs.existsSync(filePath)) res.sendFile(filePath);
   else res.sendStatus(404);
@@ -30,25 +34,29 @@ router.post("/", upload.single("avatar"), async (req, res) => {
     !req.body.firstName ||
     !req.body.lastName ||
     !req.body.email ||
+    !req.body.password ||
     !req.body.aspirationalMessage
   ) {
     res.sendStatus(400);
     return;
   }
   try {
-    const user = await req.context.models.User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      aspirationalMessage: req.body.aspirationalMessage,
-    });
+    const { token, user } = await authService.SignUp(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.email,
+      req.body.aspirationalMessage,
+      req.body.password
+    );
+
     fileName = user.dataValues.id + ".jpg";
     // Success, return status code Created
-    res.sendStatus(201);
+    res.status(201);
+    res.send({ token, user });
   } catch (err) {
     // Error saving user to database
-    // if (req.body.firstName === "Daniel") console.log(err);
     res.status(400);
+    console.log(err);
     res.send({ error: "Error creating user. Email may be in use." });
   }
   if (fileName) {
@@ -60,6 +68,18 @@ router.post("/", upload.single("avatar"), async (req, res) => {
         if (err) throw err;
       });
   }
+});
+
+router.post("/login", async (req, res) => {
+  const { token, user, error } = await authService.Login(
+    req.body.email,
+    req.body.password
+  );
+
+  if (error) {
+    res.status(401);
+    res.send({ error });
+  } else res.send({ token, user });
 });
 
 module.exports = router;

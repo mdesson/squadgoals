@@ -58,3 +58,5 @@ backend/.env:
 	echo "DATABASE=squadgoals" >> $@
 	echo "DATABASE_USER=postgres" >> $@
 	echo "DATABASE_PASSWORD=postgres" >> $@
+	echo "JWT_SECRET=DONT_USE_IN_PROD" >> $@
+	echo "JWT_EXPIRES_IN=24h" >> $@

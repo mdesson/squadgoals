@@ -12,7 +12,11 @@ const sequelize = new Sequelize(
 
 const models = {
   User: sequelize.import("./user"),
+  Auth: sequelize.import("./auth"),
 };
+
+// Add foreign key to auth
+models.Auth.belongsTo(models.User);
 
 // Associate foreign keys
 Object.keys(models).forEach((key) => {

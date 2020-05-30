@@ -57,6 +57,7 @@ describe("POST Routes", () => {
       .field("firstName", "Sally")
       .field("lastName", "Successful")
       .field("email", "sally@test.com")
+      .field("password", "sallysally")
       .field(
         "aspirationalMessage",
         "I love nothing more than a good POST that hits the db"
@@ -77,6 +78,7 @@ describe("POST Routes", () => {
       .field("firstName", "Daniel")
       .field("lastName", "Default")
       .field("email", "default@test.com")
+      .field("password", "defaultdefault")
       .field("aspirationalMessage", "Set it and forget it");
     res.should.have.status(201);
   });
@@ -89,6 +91,7 @@ describe("POST Routes", () => {
       .field("firstName", "Dolly")
       .field("lastName", "Duplicate")
       .field("email", "sally@test.com")
+      .field("password", "duplicate")
       .field("aspirationalMessage", "Duplicate email address")
       .attach(
         "avatar",
@@ -105,6 +108,7 @@ describe("POST Routes", () => {
       .set("content-type", "application/x-www-form-urlencoded")
       .field("lastName", "Failure")
       .field("email", "123@fake.com")
+      .field("password", "123456")
       .field("aspirationalMessage", "This will not work, no firstname")
       .attach(
         "avatar",
