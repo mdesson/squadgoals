@@ -1,4 +1,4 @@
-var jwt = require("express-jwt");
+const jwt = require("express-jwt");
 
 const getTokenFromHeader = (req) => {
   if (

@@ -1,5 +1,7 @@
-var user = require("./user");
+const user = require("./user");
+const squad = require("./squad");
 
 module.exports = {
   user,
+  squad,
 };

@@ -1,22 +1,16 @@
-let Sequelize = require("sequelize");
-
-const sequelize = new Sequelize(
-  process.env.DATABASE,
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASSWORD,
-  {
-    dialect: "postgres",
-    host: process.env.DB_HOST,
-  }
-);
+const User = require('./user');
+const Auth = require('./auth');
+const Squad = require('./squad');
 
 const models = {
-  User: sequelize.import("./user"),
-  Auth: sequelize.import("./auth"),
+  User: User,
+  Auth: Auth,
+  Squad: Squad,
 };
 
-// Add foreign key to auth
-models.Auth.belongsTo(models.User);
+// Set Database Relations
+Auth.belongsTo(User);
+User.hasMany(Squad, { constraints: true, onDelete: 'CASCADE' });
 
 // Associate foreign keys
 Object.keys(models).forEach((key) => {
@@ -25,4 +19,4 @@ Object.keys(models).forEach((key) => {
   }
 });
 
-module.exports = { models, sequelize };
+module.exports = models;

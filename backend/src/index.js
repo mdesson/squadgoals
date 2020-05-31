@@ -1,11 +1,11 @@
 require("dotenv/config");
-var express = require("express");
-var fs = require("fs");
-var routes = require("./routes");
-var { models, sequelize } = require("./models");
-var { appContext } = require("./middleware");
-var { authService } = require("./services");
-var cors = require("cors");
+const express = require("express");
+const fs = require("fs");
+const routes = require("./routes");
+const sequelize = require('./util/database')
+const { appContext } = require("./middleware");
+const { authService } = require("./services");
+const cors = require("cors");
 
 const app = express();
 const eraseDatabaseOnStart = false; // db cleared and repopulated on start
@@ -18,6 +18,7 @@ app.use(appContext); // Add app context to each request
 
 //// Routes ////
 app.use("/users", routes.user);
+app.use("/squads", routes.squad);
 
 // Start app (erase db if flag is true)
 sequelize.sync({ force: eraseDatabaseOnStart }).then(() => {

@@ -1,8 +1,8 @@
-var fs = require("fs");
-var path = require("path");
-var chai = require("chai");
-var chaiHttp = require("chai-http");
-var app = require("../src/index");
+const fs = require("fs");
+const path = require("path");
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const app = require("../src/index");
 
 let should = chai.should();
 let expect = chai.expect;

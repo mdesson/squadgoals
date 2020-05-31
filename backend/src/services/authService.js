@@ -1,7 +1,7 @@
-var argon2 = require("argon2");
-var jwt = require("jsonwebtoken");
-var { randomBytes } = require("crypto");
-var { models } = require("../models");
+const argon2 = require("argon2");
+const jwt = require("jsonwebtoken");
+const { randomBytes } = require("crypto");
+const models = require("../models");
 
 const AuthService = {
   async SignUp(firstName, lastName, email, aspirationalMessage, password) {
@@ -30,8 +30,9 @@ const AuthService = {
   },
 
   async Login(email, password) {
-    const user = await models.User.findByEmail(email);
-    const userAuth = await models.Auth.findByUserId(user.id);
+    const user = await models.User.findOne({ where: { email: email } });
+
+    const userAuth = await models.Auth.findOne({ where: { userId: user.id } });
 
     // No user, return error message
     if (!user) return { error: "Invalid username or password" };
