@@ -1,11 +1,12 @@
 require("dotenv/config");
 const express = require("express");
 const fs = require("fs");
+const cors = require("cors");
+
 const routes = require("./routes");
 const sequelize = require('./util/database')
 const { appContext } = require("./middleware");
 const { authService } = require("./services");
-const cors = require("cors");
 
 const app = express();
 const eraseDatabaseOnStart = false; // db cleared and repopulated on start

@@ -1,9 +1,9 @@
 const express = require("express");
 
-const router = express.Router();
-
 const squadController = require('../controllers/squad');
 const { isAuth, attachCurrentUser } = require('../middleware');
+
+const router = express.Router();
 
 router.get("/:squadId", isAuth, attachCurrentUser, squadController.getSquad);
 
