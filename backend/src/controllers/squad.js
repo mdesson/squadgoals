@@ -1,28 +1,29 @@
-exports.getSquad = async (req, res, next) => {  
+exports.getSquad = async (req, res, next) => {
   try {
     // Fetch squad from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
     const squadData = squad.dataValues;
-  
+
     // Return squad
-    res.status(201);
-    res.send(squadData);
+    res.status(201).send(squadData);
   } catch (err) {
     console.log(err)
-    res.status(404);
-    res.send({ error: "Could not find squad." });
+    res.status(404).send({
+      error: "Could not find squad."
+    });
   }
 }
 
 exports.getSquads = async (req, res, next) => {
   try {
     // Fetch squads from database
-    const squads = await req.context.models.Squad.findAll({ where: { userId: req.user.id }});
-    
+    const squads = await req.context.models.Squad.findAll({ where: { userId: req.user.id } });
+
     // Return No Content if the user has no squads
     if (squads.length < 1) {
-      res.status(204);
-      return res.send({ message: "This user has no squads."})
+      return res.status(204).send({
+        message: "This user has created no squads."
+      })
     }
 
     // Return list of squads
@@ -30,15 +31,18 @@ exports.getSquads = async (req, res, next) => {
     res.send(squads);
   } catch (err) {
     console.log(err);
-    res.status(404);
-    res.send({ error: "Could not find squads."});
+    res.status(404).send({
+      error: "Could not find squads."
+    });
   }
 }
 
 exports.postSquad = async (req, res, next) => {
   // Return Bad Request if data is missing
   if (!req.body.name) {
-    return res.sendStatus(400);
+    return res.sendStatus(400).send({
+      error: "No squad name provided."
+    });
   }
 
   const name = req.body.name;
@@ -46,7 +50,7 @@ exports.postSquad = async (req, res, next) => {
 
   try {
     const currentUser = await req.context.models.User.findByPk(userId);
-    
+
     // Create Squad
     const squad = await currentUser.createSquad({
       name: name,
@@ -54,12 +58,12 @@ exports.postSquad = async (req, res, next) => {
     });
 
     // Return newly created squad
-    res.status(201);
-    res.send(squad);
+    res.status(201).send(squad);
   } catch (err) {
     console.log(err);
-    res.status(400);
-    res.send({ error: "Error creating Squad." });
+    res.status(400).send({
+      error: "Error creating Squad."
+    });
   }
 }
 
@@ -73,14 +77,16 @@ exports.putSquad = async (req, res, next) => {
     // Update squad if it exists
     if (squad) {
       squad.name = updatedName;
-      squad.save();
-      res.status(200);
-      res.send({ message: "Squad successfully updated. "})
+      await squad.save();
+      res.status(200).send({
+        message: "Squad successfully updated."
+      });
     }
   } catch (err) {
     console.log(err);
-    res.status(404)
-    res.send({ error: "Could not update Squad." });
+    res.status(404).send({
+      error: "Could not update Squad."
+    });
   }
 }
 
@@ -88,14 +94,16 @@ exports.deleteSquad = async (req, res, next) => {
   try {
     // Fetch squad from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
-  
+
     // Delete squad from database
-    squad.destroy();
-    res.status(201);
-    res.send({ message: "Squad deleted." });
+    await squad.destroy();
+    res.status(201).send({
+      message: "Squad deleted."
+    });
   } catch (err) {
     console.log(err)
-    res.status(404);
-    res.send({ error: "Could not find squad." });
+    res.status(404).send({
+      error: "Could not find squad."
+    });
   }
 }
