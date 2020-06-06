@@ -1,16 +1,18 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const User = sequelize.define("user", {
-  email: {
-    type: Sequelize.STRING,
+const Squad = sequelize.define("squad", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
     unique: true,
-    allowNull: false,
     validate: {
       notEmpty: true,
     },
   },
-  firstName: {
+  name: {
     type: Sequelize.STRING,
     unique: false,
     allowNull: false,
@@ -18,22 +20,14 @@ const User = sequelize.define("user", {
       notEmpty: true,
     },
   },
-  lastName: {
-    type: Sequelize.STRING,
+  memberCount: {
+    type: Sequelize.INTEGER,
     unique: false,
     allowNull: false,
     validate: {
       notEmpty: true,
-    },
-  },
-  aspirationalMessage: {
-    type: Sequelize.STRING,
-    unique: false,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-  },
+    }
+  }
 });
 
-module.exports = User;
+module.exports = Squad;

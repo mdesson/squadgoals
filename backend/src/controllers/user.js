@@ -3,26 +3,20 @@ const fs = require("fs");
 
 const { authService } = require("../services");
 
-exports.getUser = (req, res, next) => {
+exports.getUser = async (req, res, next) => {
   // userId is a string so !== returns true
   if (req.user.id != req.params.userId) {
     return res.sendStatus(401);
   }
 
-  let userData;
-
-  req.context.models.User
-    .findById(req.params.userId)
-    .then(user => {
-      userData = user.dataValues;
-
-      // Delete extraneous data
-      delete userData.createdAt;
-      delete userData.updatedAt;
-
-      res.send(userData);
-    })
-    .catch(err => console.log(err))
+  const user = await req.context.models.User.findByPk(req.params.userId);
+  const userData = user.dataValues;
+  
+  // Delete extraneous data
+  delete userData.createdAt;
+  delete userData.updatedAt;
+  
+  res.send(userData);
 };
 
 exports.getUserAvatar = (req, res, next) => {
@@ -33,7 +27,7 @@ exports.getUserAvatar = (req, res, next) => {
   else {
     res.sendStatus(404);
   }
-}
+};
 
 exports.postUser = async (req, res, next) => {
   // Return error if data is missing
@@ -88,4 +82,4 @@ exports.postLogin = async (req, res, next) => {
     res.status(401);
     res.send({ error });
   } else res.send({ token, user });
-}
+} 
