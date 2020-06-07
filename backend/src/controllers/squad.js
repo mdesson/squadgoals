@@ -1,5 +1,4 @@
 const { Op } = require("sequelize");
-const { isEmpty } = require("lodash");
 
 // Squad Specific Routes
 exports.getSquad = async (req, res, next) => {
@@ -147,8 +146,8 @@ exports.postSquadMember = async (req, res, next) => {
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
     const newSquadMember = await req.context.models.User.findByPk(req.params.userId);
 
-    // Returns empty array if no duplicate SquadMember is found
-    const duplicateSquadMember = await req.context.models.SquadMember.findAll({
+    // Returns null or Sequelize Object
+    const duplicateSquadMember = await req.context.models.SquadMember.findOne({
       where: {
         [Op.and]: [
           { userId: newSquadMember.id },
@@ -158,7 +157,7 @@ exports.postSquadMember = async (req, res, next) => {
     });
 
     // Check if User is already a member of the Squad
-    if (!isEmpty(duplicateSquadMember)) {
+    if (duplicateSquadMember) {
       return res.status(400).send({
         error: "User has already been added to this squad"
       });
@@ -192,7 +191,8 @@ exports.deleteSquadMember = async (req, res, next) => {
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
     const userToDelete = await req.context.models.User.findByPk(req.params.userId);
 
-    const squadMember = await req.context.models.SquadMember.findAll({
+    // Returns null or Sequelize Object
+    const squadMember = await req.context.models.SquadMember.findOne({
       where: {
         [Op.and]: [
           { userId: userToDelete.id },
@@ -202,14 +202,16 @@ exports.deleteSquadMember = async (req, res, next) => {
     });
 
     // Check to see if user is a member of this Squad
-    if (!isEmpty(squadMember)) {
+    if (!squadMember) {
       return res.status(400).send({
         error: "That user is not a member of this squad."
       });
     }
 
     // Delete Squad Member from database
-    await squadMember[0].destroy();
+    await squadMember.destroy();
+    await squad.decrement('memberCount', { by: 1 });
+
     res.status(201).send({
       message: "User removed from the squad."
     });
