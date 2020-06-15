@@ -2,7 +2,9 @@ const express = require("express");
 const multer = require("multer");
 
 const userController = require('../controllers/user');
-const { isAuth, attachCurrentUser } = require("../middleware");
+const isAuth = require('../middleware/isAuth').isAuth;
+const attachCurrentUser = require('../middleware/attachCurrentUser');
+
 const upload = multer();
 
 const router = express.Router();

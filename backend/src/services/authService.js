@@ -19,7 +19,7 @@ const AuthService = {
     const passwordHashed = await argon2.hash(password, { salt });
 
     // Generate auth
-    const userAuth = await models.Auth.create({
+    await models.Auth.create({
       userId: userRecord.id,
       hash: passwordHashed,
       salt: salt.toString("hex"),
@@ -33,10 +33,10 @@ const AuthService = {
   async Login(email, password) {
     const user = await models.User.findOne({ where: { email: email } });
 
-    const userAuth = await models.Auth.findOne({ where: { userId: user.id } });
-
     // No user, return error message
     if (!user) return { error: "Invalid username or password" };
+
+    const userAuth = await models.Auth.findOne({ where: { userId: user.id } });
 
     // Invalid password, return error message
     const passwordValid = await argon2.verify(
