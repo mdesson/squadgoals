@@ -5,12 +5,16 @@ exports.getSquad = async (req, res, next) => {
   try {
     // Fetch squad from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
+
     const squadData = squad.dataValues;
+
+    // Delete extraneous data
+    delete squadData.createdAt;
+    delete squadData.updatedAt;
 
     // Return squad
     res.status(201).send(squadData);
   } catch (err) {
-    console.log(err)
     res.status(404).send({
       error: "Could not find squad."
     });
@@ -32,7 +36,6 @@ exports.getSquads = async (req, res, next) => {
     // Return list of squads
     res.status(200).send(squads);
   } catch (err) {
-    console.log(err);
     res.status(404).send({
       error: "Could not find squads."
     });
@@ -65,7 +68,6 @@ exports.postSquad = async (req, res, next) => {
     // Return newly created Squad
     res.status(201).send(squad);
   } catch (err) {
-    console.log(err);
     res.status(400).send({
       error: "Error creating Squad."
     });
@@ -74,6 +76,12 @@ exports.postSquad = async (req, res, next) => {
 
 exports.putSquad = async (req, res, next) => {
   const updatedName = req.body.name;
+
+  if (!updatedName) {
+    res.status(400).send({
+      error: "No name provided."
+    });
+  }
 
   try {
     // Fetch squad from database
@@ -88,7 +96,6 @@ exports.putSquad = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err);
     res.status(404).send({
       error: "Could not update Squad."
     });
@@ -106,7 +113,6 @@ exports.deleteSquad = async (req, res, next) => {
       message: "Squad deleted."
     });
   } catch (err) {
-    console.log(err)
     res.status(404).send({
       error: "Could not find squad."
     });
@@ -133,7 +139,6 @@ exports.getSquadMembers = async (req, res, next) => {
 
     res.status(200).send(userList);
   } catch (err) {
-    console.log(err);
     res.status(400).send({
       error: "Could not retrieve squad members"
     })
@@ -178,7 +183,6 @@ exports.postSquadMember = async (req, res, next) => {
       message: "User added to the squad."
     });
   } catch (err) {
-    console.log(err);
     res.status(400).send({
       error: "Could not add user to the squad."
     });
@@ -216,7 +220,6 @@ exports.deleteSquadMember = async (req, res, next) => {
       message: "User removed from the squad."
     });
   } catch (err) {
-    console.log(err);
     res.status(400).send({
       error: "Could not remove the user from the squad."
     })

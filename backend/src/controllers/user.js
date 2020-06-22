@@ -11,11 +11,11 @@ exports.getUser = async (req, res, next) => {
 
   const user = await req.context.models.User.findByPk(req.params.userId);
   const userData = user.dataValues;
-  
+
   // Delete extraneous data
   delete userData.createdAt;
   delete userData.updatedAt;
-  
+
   res.send(userData);
 };
 
@@ -58,7 +58,6 @@ exports.postUser = async (req, res, next) => {
   } catch (err) {
     // Error saving user to database
     res.status(400);
-    console.log(err);
     res.send({ error: "Error creating user. Email may be in use." });
   }
   if (fileName) {

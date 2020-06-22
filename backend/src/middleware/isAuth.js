@@ -1,15 +1,32 @@
 const jwt = require("express-jwt");
 
 const getTokenFromHeader = (req) => {
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(" ")[0] === "Bearer"
-  )
-    return req.headers.authorization.split(" ")[1];
+	const authHeader = req.get("Authorization");
+
+	if (!authHeader) {
+		const error = new Error("Not Authenticated");
+		error.statusCode = 401;
+		throw error;
+	}
+
+	const token = authHeader.split(" ")[1];
+
+	if (!token) {
+		const error = new Error("No Bearer Token");
+		error.statusCode = 500;
+		throw error;
+	}
+
+	return token;
 };
 
-module.exports = jwt({
-  secret: process.env.JWT_SECRET,
-  userProperty: "token",
-  getToken: getTokenFromHeader,
+const isAuth = jwt({
+	secret: process.env.JWT_SECRET,
+	userProperty: "token",
+	getToken: getTokenFromHeader,
 });
+
+module.exports = {
+	getTokenFromHeader,
+	isAuth,
+};
