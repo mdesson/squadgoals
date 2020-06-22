@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const routes = require("./routes");
-const sequelize = require('./util/database')
+const sequelize = require("./util/database");
 const { appContext } = require("./middleware");
 const populateDatabase = require('./util/populateDatabase');
 

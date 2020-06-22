@@ -33,6 +33,14 @@ build: | backend/data backend/.env
 	cd backend && docker build -t squadgoals-backend .
 	@echo "====== Rebuild Complete! ======"
 
+.PHONY: update
+update: 
+	@echo "====== Removing package_lock.json ======"
+	rm -f frontend/package_lock.json backend/package_lock.json
+	@echo "====== Reinstalling node_modules ======"
+	cd frontend && npm install
+	cd backend && npm install
+	@echo "====== NPM update complete! ======"
 
 .PHONY: clean
 clean:
