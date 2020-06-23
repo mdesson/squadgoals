@@ -1,10 +1,10 @@
-import React from 'react';
-import { AppContainer, setConfig } from 'react-hot-loader';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import React from "react";
+import { AppContainer, setConfig } from "react-hot-loader";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
 
-import AppRouter from './AppRouter';
-import store from './state/store';
+import AppRouter from "./AppRouter";
+import store from "./state/store";
 
 // Hide the react-hot-loader patch warning on console
 setConfig({ showReactDomPatchNotification: false });
@@ -18,7 +18,7 @@ const renderApp = (App) => {
         <App />
       </Provider>
     </AppContainer>,
-    document.getElementById('root')
+    document.getElementById("root")
   );
 };
 
