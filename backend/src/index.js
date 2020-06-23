@@ -22,13 +22,13 @@ app.use("/squads", routes.squad);
 
 // Start app (erase db if flag is true)
 sequelize.sync({ force: eraseDatabaseOnStart }).then(() => {
-	if (eraseDatabaseOnStart) {
-		console.log("Database erased. Repopulating.");
-		populateDatabase();
-	}
-	app.listen(process.env.PORT, () => {
-		console.log(`frontend is listening on port ${process.env.PORT}`);
-	});
+  if (eraseDatabaseOnStart) {
+    console.log("Database erased. Repopulating.");
+    populateDatabase();
+  }
+  app.listen(process.env.PORT, () => {
+    console.log(`frontend is listening on port ${process.env.PORT}`);
+  });
 });
 
 module.exports = app;
