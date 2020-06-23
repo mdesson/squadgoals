@@ -1,8 +1,7 @@
 const express = require("express");
 
 const squadController = require("../controllers/squad");
-const isAuth = require("../middleware/isAuth").isAuth;
-const attachCurrentUser = require("../middleware/attachCurrentUser");
+const { isAuth, attachCurrentUser } = require("../middleware");
 
 const router = express.Router();
 

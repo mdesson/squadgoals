@@ -3,48 +3,43 @@ const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
 const app = require("../src/index");
-
-// Models
-const User = require("../src/models/user");
-const Squad = require("../src/models/squad");
-
-// Util
-const createTestUser = require("./util/createTestUser");
-const createTestSquad = require("./util/createTestSquad");
+const sequelize = require("../src/util/database");
+const AuthService = require("../src/services/authService");
 
 const should = chai.should();
 const expect = chai.expect;
 
-describe("Squad Tests", () => {
-	let token1;
-	let token2;
-
+describe("Squad & SquadMember Tests", () => {
 	let testUser1;
 	let testUser2;
+	let testUser3;
 
 	let testSquad1;
 	let testSquad2;
 
-	let userObject1;
-	let userObject2;
-
 	before(async () => {
-		userObject1 = await createTestUser("foo1", "bar1", "foo1@bar.com", "foobar1", "foobar1");
-		userObject2 = await createTestUser("foo2", "bar2", "foo2@bar.com", "foobar2", "foobar2");
+		await sequelize.sync({ force: true });
 
-		testUser1 = userObject1.user;
-		token1 = userObject1.token;
+		testUser1 = await AuthService.SignUp("foo1", "bar1", "foo1@bar.com", "foobar1", "foobar1");
+		testUser2 = await AuthService.SignUp("foo2", "bar2", "foo2@bar.com", "foobar2", "foobar2");
+		testUser3 = await AuthService.SignUp("foo3", "bar3", "foo3@bar.com", "foobar3", "foobar3");
 
-		testUser2 = userObject2.user;
-		token2 = userObject2.token;
+		testSquad1 = await testUser1.user.createSquad({
+			name: "testSquad1",
+			memberCount: 1,
+		});
 
-		testSquad1 = await createTestSquad(testUser1);
-		testSquad2 = await createTestSquad(testUser1);
-	});
+		testSquad2 = await testUser1.user.createSquad({
+			name: "testSquad2",
+			memberCount: 1,
+		});
 
-	after(async () => {
-		await User.destroy({ where: {} });
-		await Squad.destroy({ where: {} });
+		await testSquad2.addUser(testUser2.user);
+		await testSquad2.addUser(testUser3.user);
+		await testSquad2.increment("memberCount", { by: 2 });
+
+		await AuthService.Login("foo1@bar.com", "foobar1");
+		await AuthService.Login("foo2@bar.com", "foobar2");
 	});
 
 	describe("GET Routes", () => {
@@ -52,7 +47,7 @@ describe("Squad Tests", () => {
 			await chai
 				.request(app)
 				.get(`/squads/99999`)
-				.set("Authorization", `Bearer ${token1}`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
 				.then((res) => {
 					res.should.have.status(404);
 				});
@@ -62,7 +57,7 @@ describe("Squad Tests", () => {
 			await chai
 				.request(app)
 				.get(`/squads/${testSquad1.id}`)
-				.set("Authorization", `Bearer ${token1}`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
 				.then((res) => {
 					res.should.have.status(201);
 					res.body.should.be.eql({
@@ -78,7 +73,7 @@ describe("Squad Tests", () => {
 			await chai
 				.request(app)
 				.get(`/squads`)
-				.set("Authorization", `Bearer ${token1}`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
 				.then((res) => {
 					res.should.have.status(200);
 					res.body.should.have.lengthOf(2);
@@ -89,9 +84,20 @@ describe("Squad Tests", () => {
 			await chai
 				.request(app)
 				.get(`/squads`)
-				.set("Authorization", `Bearer ${token2}`)
+				.set("Authorization", `Bearer ${testUser2.token}`)
 				.then((res) => {
 					res.should.have.status(204);
+				});
+		});
+
+		it("should return status code 201 and list of all squad members", async () => {
+			await chai
+				.request(app)
+				.get(`/squads/${testSquad2.id}/users`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
+				.then((res) => {
+					res.should.have.status(200);
+					res.body.should.have.lengthOf(2);
 				});
 		});
 	});
@@ -102,10 +108,26 @@ describe("Squad Tests", () => {
 				.request(app)
 				.post(`/squads`)
 				.set("content-type", "application/x-www-form-urlencoded")
-				.set("Authorization", `Bearer ${token1}`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
 				.send({ name: "squad foobar" });
 			res.should.have.status(201);
 			res.body.memberCount.should.be.eql(1);
+		});
+
+		it("should return status of 400 if the user has already been added to the squad", async () => {
+			const res = await chai
+				.request(app)
+				.post(`/squads/${testSquad2.id}/users/${testUser2.user.id}`)
+				.set("Authorization", `Bearer ${testUser1.token}`);
+			res.should.have.status(400);
+		});
+
+		it("should return status of 201 if the user was successfully added to the squad", async () => {
+			const res = await chai
+				.request(app)
+				.post(`/squads/${testSquad1.id}/users/${testUser2.user.id}`)
+				.set("Authorization", `Bearer ${testUser1.token}`);
+			res.should.have.status(201);
 		});
 	});
 
@@ -115,7 +137,7 @@ describe("Squad Tests", () => {
 				.request(app)
 				.put(`/squads/${testSquad1.id}`)
 				.set("content-type", "application/x-www-form-urlencoded")
-				.set("Authorization", `Bearer ${token1}`)
+				.set("Authorization", `Bearer ${testUser1.token}`)
 				.send({ name: "squad updated foobars" });
 			res.should.have.status(200);
 		});
@@ -125,8 +147,7 @@ describe("Squad Tests", () => {
 				.request(app)
 				.put(`/squads/99999`)
 				.set("content-type", "application/x-www-form-urlencoded")
-				.set("Authorization", `Bearer ${token1}`)
-				.send({});
+				.set("Authorization", `Bearer ${testUser1.token}`);
 			res.should.have.status(400);
 		});
 	});
@@ -137,7 +158,7 @@ describe("Squad Tests", () => {
 				.request(app)
 				.delete(`/squads/${testSquad1.id}`)
 				.set("content-type", "application/x-www-form-urlencoded")
-				.set("Authorization", `Bearer ${token1}`);
+				.set("Authorization", `Bearer ${testUser1.token}`);
 			res.should.have.status(201);
 		});
 
@@ -146,7 +167,25 @@ describe("Squad Tests", () => {
 				.request(app)
 				.delete(`/squads/${testSquad1.id}`)
 				.set("content-type", "application/x-www-form-urlencoded")
-				.set("Authorization", `Bearer ${token1}`);
+				.set("Authorization", `Bearer ${testUser1.token}`);
+			res.should.have.status(404);
+		});
+
+		it("should return status code 201 when a squad member is successfully deleted", async () => {
+			const res = await chai
+				.request(app)
+				.delete(`/squads/${testSquad2.id}/users/${testUser2.user.id}`)
+				.set("content-type", "application/x-www-form-urlencoded")
+				.set("Authorization", `Bearer ${testUser1.token}`);
+			res.should.have.status(201);
+		});
+
+		it("should return status code 404 if a squad member to be deleted cannot be found", async () => {
+			const res = await chai
+				.request(app)
+				.delete(`/squads/${testSquad2.id}/users/${testUser2.user.id}`)
+				.set("content-type", "application/x-www-form-urlencoded")
+				.set("Authorization", `Bearer ${testUser1.token}`);
 			res.should.have.status(404);
 		});
 	});

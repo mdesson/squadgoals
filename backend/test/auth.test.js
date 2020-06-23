@@ -1,121 +1,112 @@
 require("dotenv/config");
-const chai = require('chai');
+const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 
-const authMiddleware = require('../src/middleware/isAuth');
-const authService = require('../src/services/authService');
-
-const User = require('../src/models/user');
-const Auth = require('../src/models/auth');
+const sequelize = require("../src/util/database");
+const authMiddleware = require("../src/middleware/isAuth");
+const authService = require("../src/services/authService");
 
 const expect = chai.expect;
 
-describe('Authentication Tests', () => {
+describe("Authentication Tests", () => {
+	before(async () => {
+		await sequelize.sync({ force: true });
 
-  // Create test user and insert into database
-  before(async () => {
-    const firstName = 'foo';
-    const lastName = 'bar';
-    const email = 'foo@bar.com';
-    const aspirationalMessage = 'foobar';
-    const password = "foobar1";
+		const firstName = "foo";
+		const lastName = "bar";
+		const email = "foo@bar.com";
+		const aspirationalMessage = "foobar";
+		const password = "foobar1";
 
-    await authService.SignUp(firstName, lastName, email, aspirationalMessage, password);
-  })
+		await authService.SignUp(firstName, lastName, email, aspirationalMessage, password);
+	});
 
-  // Clean up User and Authentication before running next test suite
-  after(async () => {
-    await Auth.destroy({ where: {} });
-    await User.destroy({ where: {} });
-  })
+	describe("Auth Middleware", () => {
+		it("should throw an error if no authorization header is present", () => {
+			const req = {
+				get: (headerName) => {
+					return null;
+				},
+			};
 
-  describe('Auth Middleware', () => {
-    it('should throw an error if no authorization header is present', () => {
+			expect(authMiddleware.getTokenFromHeader.bind(this, req)).to.throw("Not Authenticated");
+		});
 
-      const req = {
-        get: (headerName) => {
-          return null;
-        }
-      };
+		it("should throw an error if the authorization header contains no token", () => {
+			const req = {
+				get: (headerName) => {
+					return "foobar";
+				},
+			};
 
-      expect(authMiddleware.getTokenFromHeader.bind(this, req)).to.throw('Not Authenticated');
-    });
+			expect(authMiddleware.getTokenFromHeader.bind(this, req)).to.throw("No Bearer Token");
+		});
 
-    it('should throw an error if the authorization header contains no token', () => {
-      const req = {
-        get: (headerName) => {
-          return 'foobar';
-        }
-      };
+		it("should return a token for the jwt authentication method", () => {
+			const req = {
+				get: (headerName) => {
+					return "Bearer foobar";
+				},
+			};
 
-      expect(authMiddleware.getTokenFromHeader.bind(this, req)).to.throw('No Bearer Token');
-    });
+			const result = authMiddleware.getTokenFromHeader(req);
 
-    it('should return a token for the jwt authentication method', () => {
-      const req = {
-        get: (headerName) => {
-          return 'Bearer foobar';
-        }
-      };
+			expect(result).to.equal("foobar");
+		});
+	});
 
-      const result = authMiddleware.getTokenFromHeader(req);
+	describe("Auth Service", () => {
+		it("should throw an error if not all user information is provided when creating a user", async () => {
+			const firstName = "foo";
+			const lastName = "bar";
+			const email = "foo@bar.com";
+			const aspirationalMessage = null;
 
-      expect(result).to.equal('foobar');
-    });
-  });
+			await expect(authService.SignUp(firstName, lastName, email, aspirationalMessage)).to.be.rejectedWith(
+				"notNull Violation: user.aspirationalMessage cannot be null"
+			);
+		});
 
-  describe('Auth Service', () => {
-    it('should throw an error if not all user information is provided when creating a user', async () => {
-      const firstName = 'foo';
-      const lastName = 'bar';
-      const email = 'foo@bar.com';
-      const aspirationalMessage = null;
+		it("should return a token and user after successful signup", async () => {
+			const firstName = "test";
+			const lastName = "user";
+			const email = "test@user.com";
+			const aspirationalMessage = "testuser";
+			const password = "testuser123";
 
-      await expect(authService.SignUp(firstName, lastName, email, aspirationalMessage)).to.be.rejectedWith(
-        'notNull Violation: user.aspirationalMessage cannot be null'
-      );
-    });
+			const result = await authService.SignUp(firstName, lastName, email, aspirationalMessage, password);
 
-    it('should return a token and user after successful signup', async () => {
-      const firstName = 'test';
-      const lastName = 'user';
-      const email = 'test@user.com';
-      const aspirationalMessage = 'testuser';
-      const password = 'testuser123';
+			expect(result).to.have.property("token");
+			expect(result).to.have.property("user");
+		});
 
-      const result = await authService.SignUp(firstName, lastName, email, aspirationalMessage, password);
+		it("should throw an error during login if the user does not exist", async () => {
+			const email = "foo2@bar.com";
+			const password = "foobar1";
 
-      expect(result).to.have.property('token');
-      expect(result).to.have.property('user');
-    });
+			result = await authService.Login(email, password);
 
-    it('should throw an error during login if the user does not exist', async () => {
-      const email = "foo2@bar.com";
-      const password = "foobar1";
+			expect(result).to.have.property("error", "Invalid username or password");
+		});
 
-      result = await authService.Login(email, password);
+		it("should throw an error during login if the password is incorrect", async () => {
+			const email = "foo@bar.com";
+			const password = "foobar2";
 
-      expect(result).to.have.property('error', 'Invalid username or password');
-    });
+			result = await authService.Login(email, password);
 
-    it('should throw an error during login if the password is incorrect', async () => {
-      const email = "foo@bar.com";
-      const password = "foobar2";
+			expect(result).to.have.property("error", "Invalid username or password");
+		});
 
-      result = await authService.Login(email, password);
+		it("should allow the user to login if the email and password is correct", async () => {
+			const email = "foo@bar.com";
+			const password = "foobar1";
 
-      expect(result).to.have.property('error', 'Invalid username or password');
-    });
+			result = await authService.Login(email, password);
 
-    it('should allow the user to login if the email and password is correct', async () => {
-      const email = "foo@bar.com";
-      const password = "foobar1";
-
-      result = await authService.Login(email, password);
-
-      expect(result).to.have.property('token');
-      expect(result).to.have.property('user');
-    });
-  });
+			expect(result).to.have.property("token");
+			expect(result).to.have.property("user");
+		});
+	});
 });
