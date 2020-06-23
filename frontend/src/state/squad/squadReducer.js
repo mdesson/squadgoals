@@ -88,6 +88,9 @@ const squadReducer = (state = initialState, action) => {
         isSubmitting: false,
       };
     }
+    default: {
+      return state;
+    }
   }
 };
 
