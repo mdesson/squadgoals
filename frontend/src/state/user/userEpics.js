@@ -20,12 +20,14 @@ const getUserEvent = (action$) => {
   return action$.pipe(
     ofType(GET_USER_REQUEST),
     mergeMap(({ payload: { userId } }) =>
-      ajax.getJSON(`http://localhost:3102/users/${userId}/`).pipe(
-        map((response) => getUserSuccess(response)),
-        catchError((err) => {
-          return of(getUserError(err));
-        })
-      )
+      ajax
+        .getJSON(`http://${process.env.REACT_APP_BACKEND_HOST}/users/${userId}`)
+        .pipe(
+          map((response) => getUserSuccess(response)),
+          catchError((err) => {
+            return of(getUserError(err));
+          })
+        )
     )
   );
 };
@@ -35,9 +37,13 @@ const postUserEvent = (action$) => {
     ofType(POST_USER_REQUEST),
     mergeMap(({ payload: { userInformation } }) =>
       ajax
-        .post(`http://${process.env.REACT_APP_BACKEND_HOST}:3100/users/`, userInformation, {
-          "Content-Type": "application/x-www-form-urlencoded",
-        })
+        .post(
+          `http://${process.env.REACT_APP_BACKEND_HOST}/users`,
+          userInformation,
+          {
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        )
         .pipe(
           map((response) => postUserSuccess(response)),
           catchError((err) => {

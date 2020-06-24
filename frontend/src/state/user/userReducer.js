@@ -15,22 +15,11 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_USER_REQUEST:
+    /* REQUEST */
+    case GET_USER_REQUEST: {
       return {
         ...state,
         isLoading: true,
-      };
-    case GET_USER_SUCCESS: {
-      return {
-        ...state,
-        user: action.payload.user,
-        isLoading: false,
-      };
-    }
-    case GET_USER_ERROR: {
-      return {
-        ...state,
-        isLoading: false,
       };
     }
     case POST_USER_REQUEST: {
@@ -39,10 +28,27 @@ const userReducer = (state = initialState, action) => {
         isSubmitting: true,
       };
     }
+
+    /* SUCCESS */
+    case GET_USER_SUCCESS: {
+      return {
+        ...state,
+        user: action.payload.user,
+        isLoading: false,
+      };
+    }
     case POST_USER_SUCCESS: {
       return {
         ...state,
         isSubmitting: false,
+      };
+    }
+
+    /* ERROR */
+    case GET_USER_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
       };
     }
     case POST_USER_ERROR: {
@@ -52,8 +58,9 @@ const userReducer = (state = initialState, action) => {
       };
     }
 
-    default:
+    default: {
       return state;
+    }
   }
 };
 
