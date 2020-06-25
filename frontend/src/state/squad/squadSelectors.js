@@ -17,7 +17,7 @@ export const squadIsLoadingSelector = createSelector(
   (squadState) => squadState.isLoading
 );
 
-export const userIsSubmittingSelector = createSelector(
+export const squadIsSubmittingSelector = createSelector(
   [squadStateSelector],
-  (squadState) => squadState.userIsSubmittingSelector
+  (squadState) => squadState.isSubmitting
 );
