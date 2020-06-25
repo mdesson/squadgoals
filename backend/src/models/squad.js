@@ -1,5 +1,7 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/database');
+const Sequelize = require("sequelize");
+const sequelize = require("../util/database");
+
+// TODO: UPDATE TESTS BEFORE MERGING THIS PR!
 
 const Squad = sequelize.define("squad", {
   id: {
@@ -20,14 +22,22 @@ const Squad = sequelize.define("squad", {
       notEmpty: true,
     },
   },
+  description: {
+    type: Sequelize.STRING,
+    unique: false,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
   memberCount: {
     type: Sequelize.INTEGER,
     unique: false,
     allowNull: false,
     validate: {
       notEmpty: true,
-    }
-  }
+    },
+  },
 });
 
 module.exports = Squad;

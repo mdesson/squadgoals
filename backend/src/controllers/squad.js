@@ -24,7 +24,9 @@ exports.getSquad = async (req, res, next) => {
 exports.getSquads = async (req, res, next) => {
   try {
     // Fetch squads from database
-    const squads = await req.context.models.Squad.findAll({ where: { userId: req.user.id } });
+    const squads = await req.context.models.Squad.findAll({
+      where: { userId: req.user.id },
+    });
 
     // Return No Content if the user has no squads
     if (squads.length < 1) {
@@ -44,13 +46,14 @@ exports.getSquads = async (req, res, next) => {
 
 exports.postSquad = async (req, res, next) => {
   // Return Bad Request if data is missing
-  if (!req.body.name) {
+  if (!req.body.squadName || !req.body.squadDescription) {
     return res.sendStatus(400).send({
       error: "No squad name provided.",
     });
   }
 
-  const name = req.body.name;
+  const squadName = req.body.squadName;
+  const squadDescription = req.body.squadDescription;
   const userId = req.user.id;
 
   try {
@@ -58,7 +61,8 @@ exports.postSquad = async (req, res, next) => {
 
     // Create Squad
     const squad = await currentUser.createSquad({
-      name: name,
+      name: squadName,
+      description: squadDescription,
       memberCount: 1,
     });
 
@@ -151,8 +155,9 @@ exports.postSquadMember = async (req, res, next) => {
   try {
     // Fetch Squad and User to be added from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
-
-    const newSquadMember = await req.context.models.User.findByPk(req.params.userId);
+    const newSquadMember = await req.context.models.User.findByPk(
+      req.params.userId
+    );
 
     // Returns null or Sequelize Object
     const duplicateSquadMember = await req.context.models.SquadMember.findOne({
@@ -193,7 +198,9 @@ exports.deleteSquadMember = async (req, res, next) => {
   try {
     // Fetch Squad and User to be added from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
-    const userToDelete = await req.context.models.User.findByPk(req.params.userId);
+    const userToDelete = await req.context.models.User.findByPk(
+      req.params.userId
+    );
 
     // Returns null or Sequelize Object
     const squadMember = await req.context.models.SquadMember.findOne({
