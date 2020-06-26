@@ -20,27 +20,9 @@ describe("Squad & SquadMember Tests", () => {
   before(async () => {
     await sequelize.sync({ force: true });
 
-    testUser1 = await AuthService.SignUp(
-      "foo1",
-      "bar1",
-      "foo1@bar.com",
-      "foobar1",
-      "foobar1"
-    );
-    testUser2 = await AuthService.SignUp(
-      "foo2",
-      "bar2",
-      "foo2@bar.com",
-      "foobar2",
-      "foobar2"
-    );
-    testUser3 = await AuthService.SignUp(
-      "foo3",
-      "bar3",
-      "foo3@bar.com",
-      "foobar3",
-      "foobar3"
-    );
+    testUser1 = await AuthService.SignUp("foo1", "bar1", "foo1@bar.com", "foobar1", "foobar1");
+    testUser2 = await AuthService.SignUp("foo2", "bar2", "foo2@bar.com", "foobar2", "foobar2");
+    testUser3 = await AuthService.SignUp("foo3", "bar3", "foo3@bar.com", "foobar3", "foobar3");
 
     testSquad1 = await testUser1.user.createSquad({
       name: "testSquad1",

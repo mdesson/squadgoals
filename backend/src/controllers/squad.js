@@ -155,9 +155,7 @@ exports.postSquadMember = async (req, res, next) => {
   try {
     // Fetch Squad and User to be added from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
-    const newSquadMember = await req.context.models.User.findByPk(
-      req.params.userId
-    );
+    const newSquadMember = await req.context.models.User.findByPk(req.params.userId);
 
     // Returns null or Sequelize Object
     const duplicateSquadMember = await req.context.models.SquadMember.findOne({
@@ -198,9 +196,7 @@ exports.deleteSquadMember = async (req, res, next) => {
   try {
     // Fetch Squad and User to be added from database
     const squad = await req.context.models.Squad.findByPk(req.params.squadId);
-    const userToDelete = await req.context.models.User.findByPk(
-      req.params.userId
-    );
+    const userToDelete = await req.context.models.User.findByPk(req.params.userId);
 
     // Returns null or Sequelize Object
     const squadMember = await req.context.models.SquadMember.findOne({
