@@ -5,48 +5,32 @@ const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
 const app = require("../src/index");
-
-// Models
-const User = require('../src/models/user');
-
-// Util
-const createTestUser = require('./util/createTestUser');
+const sequelize = require("../src/util/database");
+const AuthService = require("../src/services/authService");
 
 const should = chai.should();
 const expect = chai.expect;
 
-describe('User Tests', () => {
-
-  let token;
+describe("User Tests", () => {
   let testUser;
 
   before(async () => {
-    userObject = await createTestUser(
-      'foo',
-      'bar',
-      'foo@bar.com',
-      'foobar1',
-      'foobar',
-    );
+    await sequelize.sync({ force: true });
 
-    token = userObject.token;
-    testUser = userObject.user;
-  })
-
-  after(async () => {
-    await User.destroy({ where: {} });
-  })
+    testUser = await AuthService.SignUp("foo", "bar", "foo@bar.com", "foobar", "foobar");
+    await AuthService.Login("foo@bar.com", "foobar");
+  });
 
   describe("GET Routes", () => {
     it("should return status code 200 and all information pertaining to one user", (done) => {
       chai
         .request(app)
-        .get(`/users/${testUser.id}`)
-        .set("Authorization", `Bearer ${token}`)
+        .get(`/users/${testUser.user.id}`)
+        .set("Authorization", `Bearer ${testUser.token}`)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.eql({
-            id: testUser.id,
+            id: testUser.user.id,
             email: "foo@bar.com",
             firstName: "foo",
             lastName: "bar",
@@ -59,8 +43,8 @@ describe('User Tests', () => {
     it("should return status code 200 and a single user's avatar", (done) => {
       chai
         .request(app)
-        .get(`/users/avatar/${testUser.id}`)
-        .set("Authorization", `Bearer ${token}`)
+        .get(`/users/avatar/${testUser.user.id}`)
+        .set("Authorization", `Bearer ${testUser.token}`)
         .end((err, res) => {
           res.should.have.status(200);
         });
@@ -71,7 +55,7 @@ describe('User Tests', () => {
       chai
         .request(app)
         .get("/users/avatar/99999")
-        .set("Authorization", `Bearer ${token}`)
+        .set("Authorization", `Bearer ${testUser.token}`)
         .end((err, res) => {
           res.should.have.status(404);
         });
@@ -89,15 +73,8 @@ describe('User Tests', () => {
         .field("lastName", "Successful")
         .field("email", "sally@test.com")
         .field("password", "sallysally")
-        .field(
-          "aspirationalMessage",
-          "I love nothing more than a good POST that hits the db"
-        )
-        .attach(
-          "avatar",
-          fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
-          "avatar.jpg"
-        );
+        .field("aspirationalMessage", "I love nothing more than a good POST that hits the db")
+        .attach("avatar", fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")), "avatar.jpg");
       res.should.have.status(201);
     });
 
@@ -124,11 +101,7 @@ describe('User Tests', () => {
         .field("email", "sally@test.com")
         .field("password", "duplicate")
         .field("aspirationalMessage", "Duplicate email address")
-        .attach(
-          "avatar",
-          fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
-          "avatar.jpg"
-        );
+        .attach("avatar", fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")), "avatar.jpg");
       res.should.have.status(400);
     });
 
@@ -141,11 +114,7 @@ describe('User Tests', () => {
         .field("email", "123@fake.com")
         .field("password", "123456")
         .field("aspirationalMessage", "This will not work, no firstname")
-        .attach(
-          "avatar",
-          fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")),
-          "avatar.jpg"
-        );
+        .attach("avatar", fs.readFileSync(path.join(__dirname, "sampleData/avatar.jpg")), "avatar.jpg");
       res.should.have.status(400);
     });
   });
