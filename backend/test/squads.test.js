@@ -20,17 +20,37 @@ describe("Squad & SquadMember Tests", () => {
   before(async () => {
     await sequelize.sync({ force: true });
 
-    testUser1 = await AuthService.SignUp("foo1", "bar1", "foo1@bar.com", "foobar1", "foobar1");
-    testUser2 = await AuthService.SignUp("foo2", "bar2", "foo2@bar.com", "foobar2", "foobar2");
-    testUser3 = await AuthService.SignUp("foo3", "bar3", "foo3@bar.com", "foobar3", "foobar3");
+    testUser1 = await AuthService.SignUp(
+      "foo1",
+      "bar1",
+      "foo1@bar.com",
+      "foobar1",
+      "foobar1"
+    );
+    testUser2 = await AuthService.SignUp(
+      "foo2",
+      "bar2",
+      "foo2@bar.com",
+      "foobar2",
+      "foobar2"
+    );
+    testUser3 = await AuthService.SignUp(
+      "foo3",
+      "bar3",
+      "foo3@bar.com",
+      "foobar3",
+      "foobar3"
+    );
 
     testSquad1 = await testUser1.user.createSquad({
       name: "testSquad1",
+      description: "testDescription1",
       memberCount: 1,
     });
 
     testSquad2 = await testUser1.user.createSquad({
       name: "testSquad2",
+      description: "testDescription2",
       memberCount: 1,
     });
 
@@ -62,6 +82,7 @@ describe("Squad & SquadMember Tests", () => {
           res.should.have.status(201);
           res.body.should.be.eql({
             id: testSquad1.id,
+            description: testSquad1.description,
             memberCount: testSquad1.memberCount,
             name: testSquad1.name,
             userId: testSquad1.userId,
@@ -109,7 +130,7 @@ describe("Squad & SquadMember Tests", () => {
         .post(`/squads`)
         .set("content-type", "application/x-www-form-urlencoded")
         .set("Authorization", `Bearer ${testUser1.token}`)
-        .send({ name: "squad foobar" });
+        .send({ squadName: "foo", squadDescription: "bar" });
       res.should.have.status(201);
       res.body.memberCount.should.be.eql(1);
     });

@@ -1,8 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 
-// TODO: UPDATE TESTS BEFORE MERGING THIS PR!
-
 const Squad = sequelize.define("squad", {
   id: {
     type: Sequelize.INTEGER,
