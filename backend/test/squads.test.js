@@ -26,11 +26,13 @@ describe("Squad & SquadMember Tests", () => {
 
     testSquad1 = await testUser1.user.createSquad({
       name: "testSquad1",
+      description: "testDescription1",
       memberCount: 1,
     });
 
     testSquad2 = await testUser1.user.createSquad({
       name: "testSquad2",
+      description: "testDescription2",
       memberCount: 1,
     });
 
@@ -62,6 +64,7 @@ describe("Squad & SquadMember Tests", () => {
           res.should.have.status(201);
           res.body.should.be.eql({
             id: testSquad1.id,
+            description: testSquad1.description,
             memberCount: testSquad1.memberCount,
             name: testSquad1.name,
             userId: testSquad1.userId,
@@ -109,7 +112,7 @@ describe("Squad & SquadMember Tests", () => {
         .post(`/squads`)
         .set("content-type", "application/x-www-form-urlencoded")
         .set("Authorization", `Bearer ${testUser1.token}`)
-        .send({ name: "squad foobar" });
+        .send({ squadName: "foo", squadDescription: "bar" });
       res.should.have.status(201);
       res.body.memberCount.should.be.eql(1);
     });

@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
 // Forms
-import CreateAccountFormDialog from "../forms/CreateAccountFormDialog";
+import CreateAccountFormDialog from "../forms/CreateAccount/CreateAccountFormDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,11 +42,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
   const classes = useStyles();
-  const [createAccountFormDialogOpen, setCreateAccountFormDialogOpen] = useState(false);
+
+  const [createAccountFormOpen, setCreateAccountFormOpen] = useState(false);
 
   return (
     <Fragment>
-      <CreateAccountFormDialog open={createAccountFormDialogOpen} close={() => setCreateAccountFormDialogOpen(false)} />
+      <CreateAccountFormDialog open={createAccountFormOpen} close={() => setCreateAccountFormOpen(false)} />
       <Grid container component="main" className={classes.root}>
         <Grid item xs={false} sm={6} md={7} className={classes.image} />
         <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square>
@@ -90,7 +91,7 @@ function Login() {
                 <Grid item>
                   <Button
                     color="primary"
-                    onClick={() => setCreateAccountFormDialogOpen(true)}
+                    onClick={() => setCreateAccountFormOpen(true)}
                     className={classes.button}
                     variant="text"
                   >

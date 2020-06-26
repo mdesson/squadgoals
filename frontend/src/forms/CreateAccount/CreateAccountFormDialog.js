@@ -2,17 +2,15 @@ import React from "react";
 
 // Redux
 import { useDispatch } from "react-redux";
-import { postUserRequest } from "../state/user/userActions";
+import { postUserRequest } from "../../state/user/userActions";
 
 // Form
 import { TextField } from "mui-rff";
-import FormDialog from "../common/components/FormDialog";
+import FormDialog from "../../common/components/FormDialog";
 import createAccountSchema from "./CreateAccountFormDialog.schema";
 
 // Util
 import queryString from "query-string";
-
-// TODO: Add User Avatar
 
 function CreateAccountFormDialog({ open, close }) {
   const dispatch = useDispatch();

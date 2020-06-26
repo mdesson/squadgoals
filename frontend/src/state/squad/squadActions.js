@@ -16,9 +16,10 @@ export const browseSquadsRequest = () => {
 };
 
 export const POST_SQUAD_REQUEST = "POST_SQUAD_REQUEST";
-export const postSquadRequest = () => {
+export const postSquadRequest = (squadInformation) => {
   return {
     type: POST_SQUAD_REQUEST,
+    payload: { squadInformation },
   };
 };
 
@@ -52,7 +53,7 @@ export const BROWSE_SQUADS_SUCCESS = "BROWSE_SQUADS_SUCCESS";
 export const browseSquadsSuccess = (squadList) => {
   return {
     type: BROWSE_SQUADS_SUCCESS,
-    payload: { squadList },
+    payload: { squadList: squadList.response },
   };
 };
 
