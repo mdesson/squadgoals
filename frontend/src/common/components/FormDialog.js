@@ -2,14 +2,7 @@ import React from "react";
 import { Form } from "react-final-form";
 
 // Material UI
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle, Grid, makeStyles } from "@material-ui/core";
 
 // Util
 import ValidationService from "../services/validation.service";
@@ -34,8 +27,7 @@ function FormDialog({
 }) {
   const classes = useStyles();
 
-  const generateErrors = (values) =>
-    ValidationService(values, validationSchema).errors;
+  const generateErrors = (values) => ValidationService(values, validationSchema).errors;
 
   return (
     <Dialog fullWidth maxWidth={maxWidth} open={open} onClose={close}>
@@ -47,12 +39,7 @@ function FormDialog({
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit} noValidate>
               {children}
-              <Grid
-                container
-                alignItems="center"
-                justify="flex-end"
-                spacing={1}
-              >
+              <Grid container alignItems="center" justify="flex-end" spacing={1}>
                 <Grid item xs={12} sm={4}>
                   <Button
                     onClick={onCancel}
@@ -65,13 +52,7 @@ function FormDialog({
                   </Button>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                    className={classes.dialogActions}
-                  >
+                  <Button type="submit" color="primary" variant="contained" fullWidth className={classes.dialogActions}>
                     {primaryButtonLabel}
                   </Button>
                 </Grid>

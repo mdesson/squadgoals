@@ -1,14 +1,7 @@
 import React, { Fragment, useState } from "react";
 
 // Material UI
-import {
-  Avatar,
-  Button,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -54,10 +47,7 @@ function Login() {
 
   return (
     <Fragment>
-      <CreateAccountFormDialog
-        open={createAccountFormOpen}
-        close={() => setCreateAccountFormOpen(false)}
-      />
+      <CreateAccountFormDialog open={createAccountFormOpen} close={() => setCreateAccountFormOpen(false)} />
       <Grid container component="main" className={classes.root}>
         <Grid item xs={false} sm={6} md={7} className={classes.image} />
         <Grid item xs={12} sm={6} md={5} component={Paper} elevation={6} square>
@@ -94,13 +84,7 @@ function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                 Sign In
               </Button>
               <Grid container>

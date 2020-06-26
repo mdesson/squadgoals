@@ -96,10 +96,4 @@ const deleteSquadEvent = (action$) => {
   );
 };
 
-export default combineEpics(
-  getSquadEvent,
-  browseSquadsEvent,
-  postSquadEvent,
-  putSquadEvent,
-  deleteSquadEvent
-);
+export default combineEpics(getSquadEvent, browseSquadsEvent, postSquadEvent, putSquadEvent, deleteSquadEvent);

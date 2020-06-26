@@ -55,17 +55,13 @@ function SquadCard({ squad }) {
           <ListItemIcon>
             <Checkbox color="primary" />
           </ListItemIcon>
-          <ListItemText>
-            Finish squad goals before the end of summer.
-          </ListItemText>
+          <ListItemText>Finish squad goals before the end of summer.</ListItemText>
         </ListItem>
         <ListItem>
           <ListItemIcon>
             <Checkbox color="primary" />
           </ListItemIcon>
-          <ListItemText>
-            Play in the mud and eat as many rainbow as possible.
-          </ListItemText>
+          <ListItemText>Play in the mud and eat as many rainbow as possible.</ListItemText>
         </ListItem>
       </Fragment>
     );

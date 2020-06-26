@@ -5,8 +5,8 @@ import { ajax } from "rxjs/ajax";
 const CONTENT_TYPE = "application/x-www-form-urlencoded";
 
 // TODO: Use real userToken from local storage
-const userToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjozLCJlbWFpbCI6InNlYW5oZWlucmljaHNAZ21haWwuY29tIiwiZmlyc3ROYW1lIjoic2VhbiIsImxhc3ROYW1lIjoiaGVpbnJpY2hzIiwiYXNwaXJhdGlvbmFsTWVzc2FnZSI6InRlc3QiLCJjcmVhdGVkQXQiOiIyMDIwLTA2LTI0VDE2OjMwOjEwLjU1NloiLCJ1cGRhdGVkQXQiOiIyMDIwLTA2LTI0VDE2OjMwOjEwLjU1NloifSwiaWF0IjoxNTkzMDUwMzA2LCJleHAiOjE1OTMxMzY3MDZ9.OgiXvvq9OtK78E5IupbutbcsYVb99S6iireaXASD7_o";
+// For now, place bearer token in here for local testing
+const userToken = "";
 
 /**
  * Helper method to augment the XMLHttpRequest (xhr) RxJS call
