@@ -6,7 +6,8 @@ const CONTENT_TYPE = "application/x-www-form-urlencoded";
 
 // TODO: Use real userToken from local storage
 // For now, place bearer token in here for local testing
-const userToken = "";
+const userToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjozLCJlbWFpbCI6InNlYW5oZWlucmljaHNAZ21haWwuY29tIiwiZmlyc3ROYW1lIjoic2VhbiIsImxhc3ROYW1lIjoiaGVpbnJpY2hzIiwiYXNwaXJhdGlvbmFsTWVzc2FnZSI6InRlc3QiLCJjcmVhdGVkQXQiOiIyMDIwLTA2LTI0VDE2OjMwOjEwLjU1NloiLCJ1cGRhdGVkQXQiOiIyMDIwLTA2LTI0VDE2OjMwOjEwLjU1NloifSwiaWF0IjoxNTkzMjY5NzgyLCJleHAiOjE1OTMzNTYxODJ9.VKDpf0FhH_s7ccA_kTFCrONZD-4XM-0JUdgZ8DEQPfQ";
 
 /**
  * Helper method to augment the XMLHttpRequest (xhr) RxJS call
@@ -27,7 +28,7 @@ const xhr = (method, url, body = null, contentType = CONTENT_TYPE) => {
       Authorization: userToken ? `Bearer ${userToken}` : null,
     },
     responseType: "json",
-    url: `${process.env.REACT_APP_BACKEND_HOST}${url}`,
+    url: `http://localhost:3102${url}`,
   };
 
   // Adding this so we can allow for undefined contentType to trigger default behavior
