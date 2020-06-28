@@ -141,7 +141,7 @@ describe("Squad & SquadMember Tests", () => {
         .put(`/squads/${testSquad1.id}`)
         .set("content-type", "application/x-www-form-urlencoded")
         .set("Authorization", `Bearer ${testUser1.token}`)
-        .send({ name: "squad updated foobars" });
+        .send({ squadName: "squad updated name", squadDescription: "squad updated description" });
       res.should.have.status(200);
     });
 

@@ -79,11 +79,12 @@ exports.postSquad = async (req, res, next) => {
 };
 
 exports.putSquad = async (req, res, next) => {
-  const updatedName = req.body.name;
+  const updatedName = req.body.squadName;
+  const updatedDescription = req.body.squadDescription;
 
-  if (!updatedName) {
+  if (!updatedName || !updatedDescription) {
     res.status(400).send({
-      error: "No name provided.",
+      error: "Either updated name or description was not provided.",
     });
   }
 
@@ -94,6 +95,7 @@ exports.putSquad = async (req, res, next) => {
     // Update squad if it exists
     if (squad) {
       squad.name = updatedName;
+      squad.description = updatedDescription;
       await squad.save();
       res.status(200).send({
         message: "Squad successfully updated.",
