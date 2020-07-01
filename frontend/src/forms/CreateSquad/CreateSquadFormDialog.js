@@ -40,7 +40,6 @@ function CreateSquadFormDialog({ open, close }) {
         id="squadName"
         label="Squad Name"
         name="squadName"
-        autoComplete="Squad Name"
       />
       <TextField
         variant="outlined"
@@ -50,7 +49,6 @@ function CreateSquadFormDialog({ open, close }) {
         id="squadDescription"
         label="Squad Description"
         name="squadDescription"
-        autoComplete="Squad Description"
         multiline
         rows={4}
       />
